@@ -40,7 +40,7 @@ const Layout = ({ children }) => {
               Home
             </a>
           </Link>
-          <Link href='/dashboard'>
+          <Link href={`/dashboard/${user?._id}`}>
             <a className='mr-4 hover:text-primary transition-all duration-150'>
               Dashboard
             </a>

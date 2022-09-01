@@ -6,6 +6,7 @@ import { useContext } from "react"
 import { Context } from "../context"
 import { useRouter } from "next/router"
 import { toast } from "react-toastify"
+import axios from "axios"
 
 const Home = () => {
   const {
@@ -20,6 +21,7 @@ const Home = () => {
       toast.error("You have to login first")
     }
   }
+
   return (
     <Layout>
       {/* Hero */}

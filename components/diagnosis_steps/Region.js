@@ -2,7 +2,7 @@ import React from "react"
 import { useState } from "react"
 import { LocationMarkerIcon } from "@heroicons/react/solid"
 
-const Region = ({ changeKey, region, setRegion }) => {
+const Region = ({ changeKey, region, setRegion, handleSubmitData }) => {
   const [regionInput, setRegionInput] = useState("")
   return (
     <div className='bg-white h-[50vh] w-[100%] shadow-md rounded-sm'>
@@ -46,7 +46,10 @@ const Region = ({ changeKey, region, setRegion }) => {
         {region && (
           <button
             className=' bg-primary mr-4 py-2 px-4 text-white rounded-md shadow-md hover:bg-opacity-80 transition-all duration-150'
-            onClick={() => changeKey("5")}>
+            onClick={() => {
+              handleSubmitData()
+              changeKey("5")
+            }}>
             Get results
           </button>
         )}

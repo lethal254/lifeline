@@ -6,6 +6,7 @@ const Symptoms = ({
   symptoms,
   handleRemoveSymptom,
   changeKey,
+  symptomsFromServer,
 }) => {
   const [symptominput, setSymptomInput] = useState("")
   return (
@@ -27,9 +28,13 @@ const Symptoms = ({
             onChange={(e) => setSymptomInput(e.target.value)}
           />
           <datalist id='symptoms' className='bg-background'>
-            <option value='Headache'>Headache</option>
-            <option value='Chest Pain'>Chest Pain</option>
-            <option value='Stomachache'>Stomachache</option>
+            {symptomsFromServer.map((symptom) => {
+              return (
+                <>
+                  <option value={symptom}>{symptom}</option>
+                </>
+              )
+            })}
           </datalist>
 
           <div className='mt-8 flex max-w-[100%] flex-wrap'>

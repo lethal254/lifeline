@@ -23,7 +23,7 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
-      router.push("/dashboard")
+      router.push(`/dashboard/${user?._id}`)
     }
   }, [user])
 

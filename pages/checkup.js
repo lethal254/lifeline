@@ -11,13 +11,17 @@ import Layout from "../components/Layout"
 import { useRouter } from "next/router"
 import { Context } from "../context"
 const { TabPane } = Tabs
+import axios from "axios"
+import { toast } from "react-toastify"
 
-const Checkup = () => {
+const Checkup = ({ data: symptomsFromServer }) => {
   const [activeKey, setActiveKey] = useState("1")
   const [gender, setGender] = useState("")
   const [age, setAge] = useState(0)
   const [symptoms, setSymptoms] = useState([])
   const [region, setRegion] = useState("")
+  const [result, setResult] = useState("")
+  const [loading, setLoading] = useState(false)
   const {
     state: { user },
     dispatch,
@@ -39,6 +43,27 @@ const Checkup = () => {
   const handleRemoveSymptom = (symptomInput) => {
     const newSymptoms = symptoms.filter((symptom) => symptom !== symptomInput)
     setSymptoms(newSymptoms)
+  }
+  const handleSubmitData = async (e) => {
+    try {
+      setLoading(true)
+      const { data } = await axios.post("/api/query/savequery", {
+        sentBy: user._id,
+        symptoms,
+        region,
+        age,
+        gender,
+      })
+      if (data) {
+        toast.success("Success")
+        setResult(data.result)
+        setLoading(false)
+      }
+    } catch (error) {
+      toast.error("Error")
+      console.log(error)
+      setLoading(false)
+    }
   }
 
   const changeKey = (newKey) => {
@@ -68,6 +93,7 @@ const Checkup = () => {
                 changeKey={changeKey}
                 handleAddSymptoms={handleAddSymptoms}
                 symptoms={symptoms}
+                symptomsFromServer={symptomsFromServer}
                 handleRemoveSymptom={handleRemoveSymptom}
               />
             </TabPane>
@@ -76,20 +102,35 @@ const Checkup = () => {
                 changeKey={changeKey}
                 region={region}
                 setRegion={setRegion}
+                handleSubmitData={handleSubmitData}
               />
             </TabPane>
             <TabPane tab='Results' key='5' disabled={activeKey !== "5"}>
-              <Results />
+              <Results result={result} loading={loading} />
             </TabPane>
           </Tabs>
         </div>
-        {/* Right
-      <div className='flex-1'>
-        <h3>Right</h3>
-      </div> */}
       </Layout>
     )
   }
 }
 
 export default Checkup
+
+export const getServerSideProps = async ({ req, res, query }) => {
+  try {
+    const { data } = await axios.get("http://localhost:3000/api/symptoms")
+    return {
+      props: {
+        data,
+      },
+    }
+  } catch (error) {
+    console.log(error)
+    return {
+      props: {
+        error: error.message,
+      },
+    }
+  }
+}
